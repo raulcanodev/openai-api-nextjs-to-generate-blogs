@@ -1,1 +1,1 @@
-# Next JS & Open AI / GPT: Next-generation Next JS & AI apps
+# SAAS to implement the OpenAi api into a Next.js application
