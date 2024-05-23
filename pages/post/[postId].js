@@ -1,3 +1,4 @@
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 function Post() {
   return (
@@ -8,3 +9,9 @@ function Post() {
 }
 
 export default Post
+
+export const getServerSideProps = withPageAuthRequired(() => {
+	return {
+		props: {},
+	};
+});

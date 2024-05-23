@@ -1,6 +1,6 @@
 import Link from "next/link"
 import {UserProvider, useUser} from "@auth0/nextjs-auth0/client"
-import {Image} from "next/image"
+import Image from "next/image"
 
 export default function Home() {
   const {user, error, isLoading} = useUser()
@@ -15,7 +15,7 @@ export default function Home() {
 					{user ? (
 						<>
 							<div>
-                <Image src={user.picture} alt="User Picture" width={50} height={50} />
+                <Image src={user.picture} alt={user.name} width={50} height={50} />
                 <div>{user.email}</div>
               </div>
 							<Link href="/api/auth/logout">Logout</Link>
