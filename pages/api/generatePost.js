@@ -45,6 +45,7 @@ export default withApiAuthRequired (async function handler(req, res) {
           ---`,
 				},
 			],
+      
 		});
 
 		const postContent = response.data.choices[0]?.message?.content;
@@ -70,6 +71,7 @@ export default withApiAuthRequired (async function handler(req, res) {
           `,
 				},
 			],
+			response_format: { type: "json_object" },
 		});
 
 		const seoData = JSON.parse(
