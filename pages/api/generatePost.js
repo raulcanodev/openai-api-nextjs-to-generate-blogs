@@ -1,6 +1,21 @@
+import { withApiAuthRequired, getSession } from "@auth0/nextjs-auth0";
 import { OpenAIApi, Configuration } from "openai";
+import clientPromise from "../../lib/mongodb";
 
-export default async function handler(req, res) {
+export default withApiAuthRequired( async function handler(req, res) {
+  const {user} = await getSession(req, res);
+  const client = await clientPromise;
+  const db = client.db("BlogAI");
+  console.log(user.sub)
+
+  const userProfile = await db.collection("users").findOne({auth0id: user.sub});
+  console.log(userProfile)
+
+  if(!userProfile?.availableTokens){
+    res.status(403).json({error: "Not enough tokens"});
+    return;
+  }
+
 	const config = new Configuration({
 		apiKey: process.env.OPENAI_API_KEY,
 	});
@@ -63,9 +78,28 @@ export default async function handler(req, res) {
 
 		const { title, metaDescription } = seoData;
 
+    await db.collection("users").updateOne({ 
+      auth0Id: user.sub 
+    }, { 
+      $inc: { 
+        availableTokens: -1
+      } 
+    });
+    
+
+    const post = await db.collection("posts").insertOne({
+      postContent,
+      title,
+      metaDescription,
+      topic,
+      keywords,
+      userId: userProfile._id,
+      created: new Date()
+    })
+
 		res.status(200).json({ post: { postContent, title, metaDescription } });
 	} catch (error) {
 		console.error("Error generating blog post:", error);
 		res.status(500).json({ error: "Failed to generate blog post" });
 	}
-}
+})
