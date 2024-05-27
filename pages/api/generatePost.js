@@ -55,11 +55,11 @@ export default async function handler(req, res) {
           `,
 				},
 			],
+      response_format: {type:"json_object"},
 		});
 
-		const seoData = JSON.parse(
-			seoResponse.data.choices[0]?.message?.content
-		);
+		const seoData =
+			seoResponse.data.choices[0]?.message?.content || {};
 
 		const { title, metaDescription } = seoData;
 
