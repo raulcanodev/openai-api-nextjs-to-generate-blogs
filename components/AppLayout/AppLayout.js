@@ -14,18 +14,21 @@ export const AppLayout = ({ children }) => {
 			<div className="grid grid-cols-[300px_1fr] h-screen max-h-screen">
 				<div className="flex flex-col text-white overflow-hidden">
 					<div className="bg-slate-800 px-2">
-            <Link href="/" className="block mt-2 text-center">
-            <Logo />
-
-            </Link>
-						<Link
-							href="/post/new"
-							className="btn">
+						<Link href="/" className="block mt-2 text-center">
+							<Logo />
+						</Link>
+						<Link href="/post/new" className="btn">
 							New post
 						</Link>
-						<Link href="/token-topup" className="block mt-2 text-center ">
-              <FontAwesomeIcon icon={faCoins} className="text-yellow-500" />
-              <span className="pl-1">0 Tokens available</span></Link>
+						<Link
+							href="/token-topup"
+							className="block mt-2 text-center ">
+							<FontAwesomeIcon
+								icon={faCoins}
+								className="text-yellow-500"
+							/>
+							<span className="pl-1">0 Tokens available</span>
+						</Link>
 					</div>
 					<div className="flex-1 overflow-auto bg-gradient-to-b from-slate-800 to-cyan-800">
 						List of posts
@@ -56,7 +59,7 @@ export const AppLayout = ({ children }) => {
 						)}
 					</div>
 				</div>
-				<div className="">{children}</div>
+				{children}
 			</div>
 		</>
 	);

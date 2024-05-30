@@ -5,15 +5,47 @@ import {
 import clientPromise from "../../lib/mongodb";
 import { AppLayout } from '../../components/AppLayout';
 import { ObjectId } from 'mongodb';
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+
 
 
 export default function Post(props) {
-
   return (
-    <div>
-      Post page
-    </div>
-  )
+		<div className="overflow-auto h-full">
+			<div className="max-w-screen-sm mx-auto">
+				<div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-lg">
+					SEO title and meta description
+				</div>
+				<div className="p-4 my-2 border border-stone-200 rounded-lg">
+					<div className="text-blue-600 text-2xl font-bold">
+						{props.title}
+					</div>
+					<Markdown className="mt-2" rehypePlugins={[rehypeRaw]}>
+						{props.metaDescription}
+					</Markdown>
+				</div>
+				<div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-lg">
+					Keywords
+				</div>
+				<div className="flex flex-wrap pt-2 gap-1">
+					{props.keywords.split(",").map((keyword, i) => (
+						<div
+							key={i}
+							className="p-2 rounded-lg bg-slate-800 text-white">
+							#{keyword}
+						</div>
+					))}
+				</div>
+				<div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-lg">
+					Blog post
+				</div>
+				<Markdown rehypePlugins={[rehypeRaw]}>
+					{props.postContent || ""}
+				</Markdown>
+			</div>
+		</div>
+  );
 }
 
 
