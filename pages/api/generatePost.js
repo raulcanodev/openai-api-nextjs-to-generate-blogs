@@ -30,21 +30,16 @@ export default withApiAuthRequired( async function handler(req, res) {
 			messages: [
 				{
 					role: "system",
-					content:
-						"You are an SEO friendly blog post generator called BlogAI. You are designed to output markdown without formatting. Ensure it is a .md",
+					content: "You are a blog post generator.",
 				},
 				{
 					role: "user",
-					content: `Generate me a blog post on the following topic delimited by triple hyphens: 
-          ---
-          ${topic}
-          ---
-          Targeting the following comma-separated keywords delimited by triple hyphens: 
-          ---
-          ${keywords}
-          ---`,
+					content: `Write a long and detailed SEO-friendly blog post about ${topic}, that targets the following comma-separated keywords: ${keywords}. 
+      		The response should be formatted in SEO-friendly HTML, 
+      		limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.`,
 				},
 			],
+			temperature: 0,
 		});
 
 		const postContent = response.data.choices[0]?.message?.content;
@@ -54,23 +49,25 @@ export default withApiAuthRequired( async function handler(req, res) {
 			messages: [
 				{
 					role: "system",
-					content:
-						"You are an SEO friendly blog post generator called BlogAI. You are designed to output JSON. Do not include html tags in your response.",
+					content: "You are a blog post generator.",
 				},
 				{
 					role: "user",
-					content: `Generate an SEO friendly title and SEO friendly meta description for the following blog post:       
-          ${postContent}
-          ---
-          The output json must be in the following format:
-          {
-            "title": "example title",
-            "metaDescription": "example meta description"
-          }
-          `,
+					content: `Write a long and detailed SEO-friendly blog post about ${topic}, that targets the following comma-separated keywords: ${keywords}. 
+      The response should be formatted in SEO-friendly HTML, 
+      limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.`,
+				},
+				{
+					role: "assistant",
+					content: postContent,
+				},
+				{
+					role: "user",
+					content:
+						"Generate SEO-friendly meta description content for the above blog post",
 				},
 			],
-      response_format: {type:"json_object"},
+			temperature: 0,
 		});
 
 		const seoData =
