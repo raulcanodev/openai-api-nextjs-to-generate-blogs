@@ -12,7 +12,7 @@ export default withApiAuthRequired( async function handler(req, res) {
   console.log(userProfile)
 
   if(!userProfile?.availableTokens){
-    res.status(403).json({error: "Not enough tokens"});
+    res.status(403).json({error: "Not enough tokens"}); 
     return;
   }
 
@@ -78,14 +78,13 @@ export default withApiAuthRequired( async function handler(req, res) {
 
 		const { title, metaDescription } = seoData;
 
-    await db.collection("users").updateOne({ 
-      auth0Id: user.sub 
+    await db.collection("users").updateOne({
+      auth0id: user.sub 
     }, { 
       $inc: { 
         availableTokens: -1
-      } 
+      }
     });
-    
 
     const post = await db.collection("posts").insertOne({
       postContent,
