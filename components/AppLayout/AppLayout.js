@@ -6,8 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { Logo } from "../Logo/Logo";
 
-export const AppLayout = ({ children }) => {
+export const AppLayout = ({ children, availableTokens, posts, postId }) => {
 	const { user, error, isLoading } = useUser();
+	// console.log('app props', rest)
 
 	return (
 		<>
@@ -27,11 +28,15 @@ export const AppLayout = ({ children }) => {
 								icon={faCoins}
 								className="text-yellow-500"
 							/>
-							<span className="pl-1">0 Tokens available</span>
+							<span className="pl-1">
+								{availableTokens} Tokens available
+							</span>
 						</Link>
 					</div>
-					<div className="flex-1 overflow-auto bg-gradient-to-b from-slate-800 to-cyan-800">
-						List of posts
+					<div className="flex-1 px-3 overflow-auto bg-gradient-to-b from-slate-800 to-cyan-800">
+						{posts.map(post=>(
+							<Link className={`block border border-white/0 text-ellipsis overflow-hidden whitespace-nowrap my-1 px-2 bg-white/10 cursor-pointer rounded-lg py-1 ${postId === post._id ? "bg-white/20 border-white":""}`} key={post._id} href={`/post/${post._id}`}>{post.topic}</Link>
+						))}
 					</div>
 					<div className="bg-cyan-800 flex items-center gap-2 border-t border-t-black/50 h-20 px-2">
 						{user ? (

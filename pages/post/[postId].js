@@ -7,6 +7,7 @@ import { AppLayout } from '../../components/AppLayout';
 import { ObjectId } from 'mongodb';
 import Markdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import { getAppProps } from "../../utils/getAppProps";
 
 
 
@@ -56,6 +57,7 @@ Post.getLayout = function getLayout(page, pageProps) {
 
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(ctx){
+    const props = await getAppProps(ctx);
     const userSession = await getSession(ctx.req, ctx.res);
     const client = await clientPromise;
     const db = client.db("BlogAI");
@@ -77,7 +79,8 @@ export const getServerSideProps = withPageAuthRequired({
       postContent: post.postContent,
       title: post.title,
       metaDescription: post.metaDescription,
-      keywords: post.keywords
+      keywords: post.keywords,
+      ...props
     }
   }
 }
