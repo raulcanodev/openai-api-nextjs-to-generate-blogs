@@ -5,7 +5,7 @@
 ## Testing Payment Process with Stripe ##
 To test the payment process using Stripe, follow these steps:
 
-Install Stripe CLI:
+## Install Stripe CLI: ##
 
 Follow the Stripe CLI installation guide.
 Start Webhook Listener:
