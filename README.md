@@ -12,11 +12,14 @@ Start Webhook Listener:
 
 Run the following command in your terminal to forward webhooks to your local server:
 
-
+```sh
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
-Configure Your Application:
+```
+
+## Configure Your Application: ##
 
 Ensure your application is set up to handle webhooks at /api/webhooks/stripe.
-Test the Setup:
+
+## Test the Setup: ##
 
 Perform a test transaction and verify that Stripe events are received and processed correctly.
