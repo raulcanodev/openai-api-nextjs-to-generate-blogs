@@ -20,21 +20,19 @@ export default async function handler(req, res) {
 	const checkoutSession = await stripe.checkout.sessions.create({
 		line_items: lineItems,
 		mode:"payment",
-		success_url: `${protocol}${host}/success`
+		success_url: `${protocol}${host}/success`,
+		payment_intent_data:{
+			metadata:{
+				sub: user.sub
+			}
+		},
+		metadata:{
+			sub: user.sub,
+		}
 	})
 
-	const client = await clientPromise;
-	const db = client.db("BlogAI");
+	
 
-	const userProfile = await db
-		.collection("users")
-		.updateOne(
-			{ auth0id: user.sub },
-			{
-				$inc: { availableTokens: 10 },
-				$setOnInsert: { auth0id: user.sub },
-			},
-			{ upsert: true },
-		);
+	
 	res.status(200).json({ session: checkoutSession });
 }
