@@ -8,10 +8,35 @@ import { ObjectId } from 'mongodb';
 import Markdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { getAppProps } from "../../utils/getAppProps";
-
+import {useState, useContext} from 'react'
+import {useRouter} from 'next/router'
+import PostsContext from "../../context/postsContext";
 
 
 export default function Post(props) {
+	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+	const {deletePost} = useContext(PostsContext);
+	const router = useRouter()
+
+	const handleDeleteConfirm = async () => {
+		try {
+			const response = await fetch(`/api/deletePosts`, {
+				method: "POST",
+				headers: {
+					"content-type": "application/json",
+				},
+				body: JSON.stringify({ postId: props.id }),
+			});
+			const json = await response.json();
+			if(json.success){
+				deletePost(props.id)
+				router.replace(`/post/new`)
+			}
+		} catch (error) {
+			
+		}
+	}
+
   return (
 		<div className="overflow-auto h-full">
 			<div className="max-w-screen-sm mx-auto">
@@ -44,6 +69,31 @@ export default function Post(props) {
 				<Markdown rehypePlugins={[rehypeRaw]}>
 					{props.postContent || ""}
 				</Markdown>
+				{!showDeleteConfirm && (
+					<div className="my-8">
+						<button
+							onClick={() => setShowDeleteConfirm(true)}
+							className="btn bg-red-600 hover:bg-red-700">
+							Delete post
+						</button>
+					</div>
+				)}
+				{showDeleteConfirm && (
+					<div className="my-4">
+						<p className="p-2 bg-red-300 text-center rounded-lg">
+							Are you sure you want to delete this posts? This
+							action is irreversible
+						</p>
+						<div className="grid grid-cols-2 gap-4">
+							<button onClick={()=> setShowDeleteConfirm(false)} className="btn bg-stone-600 hover:bg-stone-700">
+								Cancel
+							</button>
+							<button onClick={handleDeleteConfirm} className="btn bg-red-600 hover:bg-red-700">
+								Confirm delete
+							</button>
+						</div>
+					</div>
+				)}
 			</div>
 		</div>
   );
@@ -76,10 +126,12 @@ export const getServerSideProps = withPageAuthRequired({
   }
   return {
     props: {
+			id: ctx.params.postId,
       postContent: post.postContent,
       title: post.title,
       metaDescription: post.metaDescription,
       keywords: post.keywords,
+			postCreated: post.created.toString(),
       ...props
     }
   }

@@ -1,44 +1,44 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import { AppLayout } from '../../components/AppLayout/';
-import {useState} from 'react';
-import {useRouter} from 'next/router';
-import {getAppProps} from '../../utils/getAppProps';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faBrain} from '@fortawesome/free-solid-svg-icons'
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { AppLayout } from "../../components/AppLayout/";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { getAppProps } from "../../utils/getAppProps";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBrain } from "@fortawesome/free-solid-svg-icons";
 
 export default function NewPost() {
 	const router = useRouter();
-  const [topic, setTopic] = useState('');
-  const [keywords, setKeywords] = useState('');
-	const [generating, setGenerating] = useState(false)
+	const [topic, setTopic] = useState("");
+	const [keywords, setKeywords] = useState("");
+	const [generating, setGenerating] = useState(false);
 
-  const handleSubmit = async (e)=>{
-    e.preventDefault();
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 		setGenerating(true);
 
 		try {
-    const response = await fetch('/api/generatePost',{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        topic,
-        keywords
-      })
-    });
-    const json = await response.json();
-		console.log(json)
-		if(json?.postId){
-			router.push(`/post/${json.postId}`)
+			const response = await fetch("/api/generatePost", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					topic,
+					keywords,
+				}),
+			});
+			const json = await response.json();
+			console.log(json);
+			if (json?.postId) {
+				router.push(`/post/${json.postId}`);
+			}
+		} catch (e) {
+			console.log(e);
+			setGenerating(false);
 		}
-	}catch(e){
-		console.log(e)
-		setGenerating(false)
-	}
-  }
+	};
 
-  return (
+	return (
 		<div className="h-full overflow-hidden bg-gray-50 ">
 			{generating && (
 				<div className="text-green-500 flex h-full animate-pulse w-full flex-col justify-center items-center">
@@ -92,24 +92,24 @@ export default function NewPost() {
 				</div>
 			)}
 		</div>
-  );
+	);
 }
 
 NewPost.getLayout = function getLayout(page, pageProps) {
 	// console.log('new.js pageprops', pageProps)
-  return <AppLayout{...pageProps}>{page}</AppLayout>
-}
+	return <AppLayout {...pageProps}>{page}</AppLayout>;
+};
 
 export const getServerSideProps = withPageAuthRequired({
 	async getServerSideProps(ctx) {
 		const props = await getAppProps(ctx);
-		if(!props.availableTokens){
-			return{
-				redirect:{
+		if (!props.availableTokens) {
+			return {
+				redirect: {
 					destination: "/token-topup",
-					permanent: false
-				}
-			}
+					permanent: false,
+				},
+			};
 		}
 		return { props };
 	},
