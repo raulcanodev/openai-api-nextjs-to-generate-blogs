@@ -15,9 +15,8 @@ export const AppLayout = ({
 	postCreated
 }) => {
 	const { user } = useUser();
-
 	const { setPostsFromSSR, posts, getPosts,noMorePosts } = useContext(PostsContext);
-
+	
 	useEffect(() => {
 		setPostsFromSSR(postsFromSSR);
 		if (postId) {
@@ -26,6 +25,7 @@ export const AppLayout = ({
 				getPosts({ getNewerPosts: true, lastPostDate: postCreated });
 			}
 		}
+		console.log(posts.length)
 	}, [postsFromSSR, setPostsFromSSR, postId, postCreated, getPosts]);
 
 	return (
